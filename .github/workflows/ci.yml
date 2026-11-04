@@ -7,14 +7,18 @@ on:
 
 jobs:
   tests:
+    name: tests (PHP ${{ matrix.php }}, ${{ matrix.dependencies }})
     runs-on: ubuntu-latest
+    # The lowest-dependencies run is informational: it must not block the PR.
+    continue-on-error: ${{ matrix.dependencies == 'lowest' }}
     strategy:
       fail-fast: false
       matrix:
         php: ['8.3', '8.4', '8.5']
+        dependencies: ['stable']
         include:
           - php: '8.3'
-            composer-flags: '--prefer-lowest'
+            dependencies: 'lowest'
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -22,9 +26,38 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: curl, openssl
           tools: composer
-      - run: composer update --prefer-dist --no-interaction ${{ matrix.composer-flags }}
-      - run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite offline
-      - name: Live Sandbox catalog tests
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --prefer-${{ matrix.dependencies }}
+      - name: Offline tests
+        run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite offline
+      - name: Mess detector
+        run: vendor/bin/phpmd src/ text phpmd.xml.dist
+      - name: Code style
+        run: vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --dry-run --using-cache=no
+
+  # Calls the real Facturama Sandbox, so it needs a valid account stored in the
+  # repository secrets FACTURAMA_SANDBOX_USER / FACTURAMA_SANDBOX_PASSWORD.
+  # Without them (or when the Sandbox is down) it is skipped / non-blocking.
+  live:
+    name: live Sandbox catalogs
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      api_username: ${{ secrets.FACTURAMA_SANDBOX_USER }}
+      api_password: ${{ secrets.FACTURAMA_SANDBOX_PASSWORD }}
+    steps:
+      - name: Check credentials
+        id: creds
+        run: echo "present=${{ env.api_username != '' && env.api_password != '' }}" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.creds.outputs.present == 'true'
+      - uses: shivammathur/setup-php@v2
+        if: steps.creds.outputs.present == 'true'
+        with:
+          php-version: '8.3'
+          extensions: curl, openssl
+          tools: composer
+      - if: steps.creds.outputs.present == 'true'
+        run: composer update --prefer-dist --no-interaction
+      - if: steps.creds.outputs.present == 'true'
         run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite live
-      - run: vendor/bin/phpmd src/ text phpmd.xml.dist
-      - run: vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --dry-run --using-cache=no

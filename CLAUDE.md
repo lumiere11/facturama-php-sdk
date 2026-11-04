@@ -14,7 +14,7 @@ vendor/bin/phpmd src/ text phpmd.xml.dist          # mess detector (runs in CI)
 vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run -v   # style check (src/, tests/, config/, examples/)
 ```
 
-CI (`.github/workflows/ci.yml`) runs those three checks on PHP 8.3–8.5; 8.3 also runs with `--prefer-lowest`. The package requires `php ^8.3` (Laravel 13's floor). Pushing a `v*` tag runs `.github/workflows/release.yml`, which requires the tag to equal `Client::VERSION`.
+CI (`.github/workflows/ci.yml`) runs the offline suite, phpmd and php-cs-fixer on PHP 8.3–8.5, plus a non-blocking `--prefer-lowest` run on 8.3. The `live` Sandbox suite is a separate non-blocking job that only runs when the repo secrets `FACTURAMA_SANDBOX_USER`/`FACTURAMA_SANDBOX_PASSWORD` exist (the old public `pruebas` account now returns 401). The package requires `php ^8.3` (Laravel 13's floor). Pushing a `v*` tag runs `.github/workflows/release.yml`, which requires the tag to equal `Client::VERSION`.
 
 ## Architecture
 

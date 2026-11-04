@@ -23,7 +23,7 @@ return (new PhpCsFixer\Config())
         'header_comment' => ['header' => $header],
         'heredoc_to_nowdoc' => true,
         'linebreak_after_opening_tag' => true,
-        'mb_str_functions' => true,
+        'mb_str_functions' => false,
         'modernize_types_casting' => true,
         'no_empty_comment' => true,
         'no_extra_blank_lines' => ['tokens' => [
