@@ -10,7 +10,7 @@
 
 ## Dependencies
 
-This library requires PHP 7.4 or higher (tested up to PHP 8.3).
+This library requires PHP 7.4 or higher (tested up to PHP 8.5).
 
 ## Create user account
 
