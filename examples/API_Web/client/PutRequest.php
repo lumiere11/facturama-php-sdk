@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
- * (c) Facturama <soporte-api@facturama.mx>
+ * (c) Facturama <dev@facturama.com>
  *
  * This source file is subject to a MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -16,26 +18,26 @@ $facturama = new Facturama\Client('pruebas', 'pruebas2011');
 $clientId = 'TGpJ_Ko32_ZSEPBcZXRnRw2';
 
 $body = [
-  'Id' => $clientId,
-  'Rfc' => 'CACX7605101P8',
-  'Name' => 'XOCHILT CASAS CHAVEZ',
-  'Email' => 'test@facturma.com',
-  'FiscalRegime'=>'601',
-  'CfdiUse'=>'G03',
-  'TaxZipCode'=>'10740',
-  'TaxResidence'=> '10740',
-  'NumRegIdTrib'=> '131494-1055',
-  'Address' => [
-      'Street' => 'Calle de Pruebas',
-      'ExteriorNumber' => '123',
-      'InteriorNumber' => '456',
-      'Neighborhood' => 'Colombia',
-      'ZipCode' => '10740',
-      'Locality' => 'Mexico',
-      'Municipality' => 'Mexico Mun',
-      'State' => 'Cd de Mexico',
-      'Country' => 'MX',
-],
+    'Id' => $clientId,
+    'Rfc' => 'CACX7605101P8',
+    'Name' => 'XOCHILT CASAS CHAVEZ',
+    'Email' => 'test@facturma.com',
+    'FiscalRegime' => '601',
+    'CfdiUse' => 'G03',
+    'TaxZipCode' => '10740',
+    'TaxResidence' => '10740',
+    'NumRegIdTrib' => '131494-1055',
+    'Address' => [
+        'Street' => 'Calle de Pruebas',
+        'ExteriorNumber' => '123',
+        'InteriorNumber' => '456',
+        'Neighborhood' => 'Colombia',
+        'ZipCode' => '10740',
+        'Locality' => 'Mexico',
+        'Municipality' => 'Mexico Mun',
+        'State' => 'Cd de Mexico',
+        'Country' => 'MX',
+    ],
 ];
 
 $result = $facturama->put('Client/'.$clientId, $body);

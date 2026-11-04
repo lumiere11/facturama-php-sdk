@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -58,7 +60,7 @@ class FederalTaxTest extends LiveApiTestCase
      */
     public static function getFederalTaxes(): iterable
     {
-        $client = new Client(getenv('api_username'), getenv('api_password'));
+        $client = new Client(getenv('api_username') ?: null, getenv('api_password') ?: null);
 
         foreach ($client->get('catalogs/FederalTaxes') as $paymentForm) {
             yield [$paymentForm];

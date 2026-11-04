@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -27,57 +29,57 @@ use GuzzleHttp\RequestOptions;
  */
 class Client
 {
-    public const VERSION = '3.0.0';
+    public const string VERSION = '3.0.0';
     /*
     https://apisandbox.facturama.mx //Pruebas desarrollo
     https://api.facturama.mx  //Produccion
     */
-    public const API_URL = 'https://apisandbox.facturama.mx/';
-    public const SANDBOX_URL = 'https://apisandbox.facturama.mx';
-    public const PRODUCTION_URL = 'https://api.facturama.mx';
-    public const USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
+    public const string API_URL = 'https://apisandbox.facturama.mx/';
+    public const string SANDBOX_URL = 'https://apisandbox.facturama.mx';
+    public const string PRODUCTION_URL = 'https://api.facturama.mx';
+    public const string USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
 
-    public const FILE_TYPE_PDF = 'pdf';
-    public const FILE_TYPE_HTML = 'html';
-    public const FILE_TYPE_XML = 'xml';
+    public const string FILE_TYPE_PDF = 'pdf';
+    public const string FILE_TYPE_HTML = 'html';
+    public const string FILE_TYPE_XML = 'xml';
 
-    public const RECEIPT_PAYROLL = 'payroll';
-    public const RECEIPT_RECEIVED = 'received';
-    public const RECEIPT_ISSUED = 'issued';
+    public const string RECEIPT_PAYROLL = 'payroll';
+    public const string RECEIPT_RECEIVED = 'received';
+    public const string RECEIPT_ISSUED = 'issued';
 
-    public const STATE_AGUASCALIENTES = 'AGUASCALIENTES';
-    public const STATE_BAJA_CALIFORNIA = 'BAJA CALIFORNIA';
-    public const STATE_BAJA_CALIFORNIA_SUR = 'BAJA CALIFORNIA SUR';
-    public const STATE_CAMPECHE = 'CAMPECHE';
-    public const STATE_CHIAPAS = 'CHIAPAS';
-    public const STATE_CHIHUAHUA = 'CHIHUAHUA';
-    public const STATE_COAHUILA = 'COAHUILA';
-    public const STATE_COLIMA = 'COLIMA';
-    public const STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
-    public const STATE_CIUDAD_DE_MEXICO = 'CIUDAD DE MEXICO';
-    public const STATE_DURANGO = 'DURANGO';
-    public const STATE_GUANAJUATO = 'GUANAJUATO';
-    public const STATE_GUERRERO = 'GUERRERO';
-    public const STATE_HIDALGO = 'HIDALGO';
-    public const STATE_JALISCO = 'JALISCO';
-    public const STATE_ESTADO_DE_MEXICO = 'ESTADO DE MEXICO';
-    public const STATE_MICHOACAN_DE_OCAMPO = 'MICHOACAN DE OCAMPO';
-    public const STATE_MORELOS = 'MORELOS';
-    public const STATE_NAYARIT = 'NAYARIT';
-    public const STATE_NUEVO_LEON = 'NUEVO LEON';
-    public const STATE_OAXACA = 'OAXACA';
-    public const STATE_PUEBLA = 'PUEBLA';
-    public const STATE_QUERETARO = 'QUERETARO';
-    public const STATE_QUINTANA_ROO = 'QUINTANA ROO';
-    public const STATE_SAN_LUIS_POTOSI = 'SAN LUIS POTOSI';
-    public const STATE_SINALOA = 'SINALOA';
-    public const STATE_SONORA = 'SONORA';
-    public const STATE_TABASCO = 'TABASCO';
-    public const STATE_TAMAULIPAS = 'TAMAULIPAS';
-    public const STATE_TLAXCALA = 'TLAXCALA';
-    public const STATE_VERACRUZ_DE_IGNACIO_DE_LA_LLAVE = 'VERACRUZ DE IGNACIO DE LA LLAVE';
-    public const STATE_YUCATAN = 'YUCATAN';
-    public const STATE_ZACATECAS = 'ZACATECAS';
+    public const string STATE_AGUASCALIENTES = 'AGUASCALIENTES';
+    public const string STATE_BAJA_CALIFORNIA = 'BAJA CALIFORNIA';
+    public const string STATE_BAJA_CALIFORNIA_SUR = 'BAJA CALIFORNIA SUR';
+    public const string STATE_CAMPECHE = 'CAMPECHE';
+    public const string STATE_CHIAPAS = 'CHIAPAS';
+    public const string STATE_CHIHUAHUA = 'CHIHUAHUA';
+    public const string STATE_COAHUILA = 'COAHUILA';
+    public const string STATE_COLIMA = 'COLIMA';
+    public const string STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
+    public const string STATE_CIUDAD_DE_MEXICO = 'CIUDAD DE MEXICO';
+    public const string STATE_DURANGO = 'DURANGO';
+    public const string STATE_GUANAJUATO = 'GUANAJUATO';
+    public const string STATE_GUERRERO = 'GUERRERO';
+    public const string STATE_HIDALGO = 'HIDALGO';
+    public const string STATE_JALISCO = 'JALISCO';
+    public const string STATE_ESTADO_DE_MEXICO = 'ESTADO DE MEXICO';
+    public const string STATE_MICHOACAN_DE_OCAMPO = 'MICHOACAN DE OCAMPO';
+    public const string STATE_MORELOS = 'MORELOS';
+    public const string STATE_NAYARIT = 'NAYARIT';
+    public const string STATE_NUEVO_LEON = 'NUEVO LEON';
+    public const string STATE_OAXACA = 'OAXACA';
+    public const string STATE_PUEBLA = 'PUEBLA';
+    public const string STATE_QUERETARO = 'QUERETARO';
+    public const string STATE_QUINTANA_ROO = 'QUINTANA ROO';
+    public const string STATE_SAN_LUIS_POTOSI = 'SAN LUIS POTOSI';
+    public const string STATE_SINALOA = 'SINALOA';
+    public const string STATE_SONORA = 'SONORA';
+    public const string STATE_TABASCO = 'TABASCO';
+    public const string STATE_TAMAULIPAS = 'TAMAULIPAS';
+    public const string STATE_TLAXCALA = 'TLAXCALA';
+    public const string STATE_VERACRUZ_DE_IGNACIO_DE_LA_LLAVE = 'VERACRUZ DE IGNACIO DE LA LLAVE';
+    public const string STATE_YUCATAN = 'YUCATAN';
+    public const string STATE_ZACATECAS = 'ZACATECAS';
 
     private ClientInterface $client;
 

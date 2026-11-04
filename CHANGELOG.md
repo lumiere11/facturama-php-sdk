@@ -4,7 +4,8 @@
 
 ### Breaking
 - Requires PHP `^8.3` (aligned with Laravel 13) and Guzzle `^7.8`.
-- `Client` methods now have native parameter and return types.
+- `Client` methods now have native parameter and return types, and every file uses `declare(strict_types=1)`.
+- `CatalogInterface::findByName()`/`findByValue()` and all catalog constants are now typed (PHP 8.3 typed class constants).
 - Invalid JSON in a successful response now throws `ResponseException` (it used to leak `InvalidArgumentException`); a non-JSON error body now throws `RequestException`.
 - Removed the CFDI 3.3 examples; they can no longer be stamped.
 

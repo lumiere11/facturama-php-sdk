@@ -14,6 +14,8 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setRules([
         '@Symfony' => true,
+        '@PHP83Migration' => true,
+        '@PHP82Migration:risky' => true,
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'dir_constant' => true,
@@ -47,9 +49,10 @@ return (new PhpCsFixer\Config())
         'php_unit_construct' => true,
         'php_unit_strict' => true,
         'psr_autoloading' => true,
+        'declare_strict_types' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in([__DIR__.'/src', __DIR__.'/tests', __DIR__.'/config'])
+            ->in([__DIR__.'/src', __DIR__.'/tests', __DIR__.'/config', __DIR__.'/examples'])
     )
 ;

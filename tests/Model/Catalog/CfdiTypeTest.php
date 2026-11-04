@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -61,7 +63,7 @@ class CfdiTypeTest extends LiveApiTestCase
      */
     public static function getCfdiTypes(): iterable
     {
-        $client = new Client(getenv('api_username'), getenv('api_password'));
+        $client = new Client(getenv('api_username') ?: null, getenv('api_password') ?: null);
 
         foreach ($client->get('catalogs/CfdiTypes') as $cfdiType) {
             yield [$cfdiType];

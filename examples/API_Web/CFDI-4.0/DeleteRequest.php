@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
- * (c) Facturama <soporte-api@facturama.mx>
+ * (c) Facturama <dev@facturama.com>
  *
  * This source file is subject to a MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -17,7 +19,7 @@ $CfdiId = 'sniJoQdMCaa1c3M_7TLjIQ2';
 
 $params = [
     'type' => 'issued',
-    'motive'=>'02',
+    'motive' => '02',
 ];
 
 $result = $facturama->delete('Cfdi/'.$CfdiId, $params);

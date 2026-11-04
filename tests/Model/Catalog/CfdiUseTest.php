@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -64,7 +66,7 @@ class CfdiUseTest extends LiveApiTestCase
      */
     public static function getCfdiUses(): iterable
     {
-        $client = new Client(getenv('api_username'), getenv('api_password'));
+        $client = new Client(getenv('api_username') ?: null, getenv('api_password') ?: null);
 
         // RFC with 12 chars length
         foreach ($client->get('catalogs/CfdiUses', ['keyword' => 'AAAA12345678']) as $cfdiUse) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -27,7 +29,7 @@ abstract class LiveApiTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->client = new Client(getenv('api_username'), getenv('api_password'));
+        $this->client = new Client(getenv('api_username') ?: null, getenv('api_password') ?: null);
         $this->client->setApiUrl('https://apisandbox.facturama.mx');
     }
 }

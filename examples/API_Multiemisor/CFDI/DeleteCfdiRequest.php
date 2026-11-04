@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
- * (c) Facturama <soporte-api@facturama.mx>
+ * (c) Facturama <dev@facturama.com>
  *
  * This source file is subject to a MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -13,12 +15,12 @@ require __DIR__.'/../../../vendor/autoload.php';
 
 $facturama = new Facturama\Client('pruebas', 'pruebas2011');
 
-$CfdiId='9DLXTRINxFpHGLGEDWu23g2';
+$CfdiId = '9DLXTRINxFpHGLGEDWu23g2';
 
-$params = 
+$params =
 [
-    'motive'=>'02',
-    //'uuidReplacement'=>'null'
+    'motive' => '02',
+    // 'uuidReplacement'=>'null'
 ];
 
 $result = $facturama->delete('api-lite/cfdis/'.$CfdiId, $params);
