@@ -82,6 +82,9 @@ class CfdiUse implements CatalogInterface
         'moral' => true,
         'natural' => true,
     ];
+    /**
+     * @deprecated `P01` was removed in CFDI 4.0; only valid for CFDI 3.3.
+     */
     const CFDI_USE_TO_BE_DEFINED = [
         'name' => 'Por definir',
         'value' => 'P01',
@@ -150,6 +153,34 @@ class CfdiUse implements CatalogInterface
     ];
 
     /**
+     * CFDI 4.0 only.
+     */
+    const CFDI_USE_WITHOUT_TAX_EFFECTS = [
+        'name' => 'Sin efectos fiscales',
+        'value' => 'S01',
+        'moral' => true,
+        'natural' => true,
+    ];
+    /**
+     * CFDI 4.0 only.
+     */
+    const CFDI_USE_PAYMENTS = [
+        'name' => 'Pagos',
+        'value' => 'CP01',
+        'moral' => true,
+        'natural' => true,
+    ];
+    /**
+     * CFDI 4.0 only.
+     */
+    const CFDI_USE_PAYROLL = [
+        'name' => 'Nómina',
+        'value' => 'CN01',
+        'moral' => false,
+        'natural' => true,
+    ];
+
+    /**
      * @var array
      *
      * @see https://www.api.facturama.com.mx/api/catalogs/CfdiUses
@@ -177,6 +208,9 @@ class CfdiUse implements CatalogInterface
         self::CFDI_USE_SCHOOL_TRANSPORTATION_EXPENSES,
         self::CFDI_USE_PENSION_PLAN_DEPOSIT,
         self::CFDI_USE_EDUCATIONAL_SERVICE_PAYMENTS,
+        self::CFDI_USE_WITHOUT_TAX_EFFECTS,
+        self::CFDI_USE_PAYMENTS,
+        self::CFDI_USE_PAYROLL,
     ];
 
     /**

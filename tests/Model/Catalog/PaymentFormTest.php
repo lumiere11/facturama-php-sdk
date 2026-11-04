@@ -30,10 +30,10 @@ class PaymentFormTest extends FacturamaBaseTest
      */
     public function testPaymentForms(\stdClass $paymentForm)
     {
-        $this->assertObjectHasAttribute('Name', $paymentForm);
+        $this->assertTrue(property_exists($paymentForm, 'Name'));
         $this->assertSame($paymentForm->Name, PaymentForm::findByName($paymentForm->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $paymentForm);
+        $this->assertTrue(property_exists($paymentForm, 'Value'));
         $this->assertSame($paymentForm->Value, PaymentForm::findByValue($paymentForm->Value)['value']);
     }
 

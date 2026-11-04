@@ -30,10 +30,10 @@ class FederalTaxTest extends FacturamaBaseTest
      */
     public function testFederalTaxes(\stdClass $federalTax)
     {
-        $this->assertObjectHasAttribute('Name', $federalTax);
+        $this->assertTrue(property_exists($federalTax, 'Name'));
         $this->assertSame($federalTax->Name, FederalTax::findByName($federalTax->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $federalTax);
+        $this->assertTrue(property_exists($federalTax, 'Value'));
         $this->assertSame($federalTax->Value, FederalTax::findByValue($federalTax->Value)['value']);
     }
 

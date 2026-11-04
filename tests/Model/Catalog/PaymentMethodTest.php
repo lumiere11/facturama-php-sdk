@@ -30,10 +30,10 @@ class PaymentMethodTest extends FacturamaBaseTest
      */
     public function testPaymentMethods(\stdClass $paymentMethod)
     {
-        $this->assertObjectHasAttribute('Name', $paymentMethod);
+        $this->assertTrue(property_exists($paymentMethod, 'Name'));
         $this->assertSame($paymentMethod->Name, PaymentMethod::findByName($paymentMethod->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $paymentMethod);
+        $this->assertTrue(property_exists($paymentMethod, 'Value'));
         $this->assertSame($paymentMethod->Value, PaymentMethod::findByValue($paymentMethod->Value)['value']);
     }
 

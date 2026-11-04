@@ -30,16 +30,16 @@ class CfdiUseTest extends FacturamaBaseTest
      */
     public function testCfdiUses(\stdClass $cfdiUse)
     {
-        $this->assertObjectHasAttribute('Name', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Name'));
         $this->assertSame($cfdiUse->Name, CfdiUse::findByName($cfdiUse->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Value'));
         $this->assertSame($cfdiUse->Value, CfdiUse::findByValue($cfdiUse->Value)['value']);
 
-        $this->assertObjectHasAttribute('Moral', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Moral'));
         $this->assertSame($cfdiUse->Moral, CfdiUse::findByName($cfdiUse->Name)['moral']);
 
-        $this->assertObjectHasAttribute('Natural', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Natural'));
         $this->assertSame($cfdiUse->Natural, CfdiUse::findByName($cfdiUse->Name)['natural']);
     }
 

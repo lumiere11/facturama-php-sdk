@@ -30,12 +30,12 @@ class CfdiTypeTest extends FacturamaBaseTest
      */
     public function testCfdiTypes(\stdClass $cfdiType)
     {
-        $this->assertObjectHasAttribute('Name', $cfdiType);
+        $this->assertTrue(property_exists($cfdiType, 'Name'));
         $this->assertSame($cfdiType->Name, CfdiType::findByName($cfdiType->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $cfdiType);
+        $this->assertTrue(property_exists($cfdiType, 'Value'));
         $this->assertInstanceOf(\Generator::class, CfdiType::findByValue($cfdiType->Value));
-        $this->assertObjectHasAttribute('NameId', $cfdiType);
+        $this->assertTrue(property_exists($cfdiType, 'NameId'));
         $this->assertContains(['name' => $cfdiType->Name, 'nameid' => $cfdiType->NameId, 'value' => $cfdiType->Value], CfdiType::findByValue($cfdiType->Value));
     }
 

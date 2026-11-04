@@ -24,13 +24,13 @@ use GuzzleHttp\RequestOptions;
  */
 class Client
 {
-    const VERSION = '2.0.1';
+    const VERSION = '2.1.0';
     /*
     https://apisandbox.facturama.mx //Pruebas desarrollo
     https://api.facturama.mx  //Produccion
     */
     const API_URL = 'https://apisandbox.facturama.mx/';
-    const USER_AGENT = 'Facturama-PHP-SDK-v2.0.1';
+    const USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
 
     const FILE_TYPE_PDF = 'pdf';
     const FILE_TYPE_HTML = 'html';
@@ -49,6 +49,7 @@ class Client
     const STATE_COAHUILA = 'COAHUILA';
     const STATE_COLIMA = 'COLIMA';
     const STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
+    const STATE_CIUDAD_DE_MEXICO = 'CIUDAD DE MEXICO';
     const STATE_DURANGO = 'DURANGO';
     const STATE_GUANAJUATO = 'GUANAJUATO';
     const STATE_GUERRERO = 'GUERRERO';
@@ -81,7 +82,7 @@ class Client
     /**
      * @var string
      */
-    private $baseUri = self::API_URL;
+    private $baseUri;
 
     /**
      * @param string $user
@@ -89,7 +90,7 @@ class Client
      * @param array $requestOptions
      * @param null|ClientInterface $httpClient
      */
-    public function __construct($user = null, $password = null, array $requestOptions = [], ClientInterface $httpClient = null)
+    public function __construct($user = null, $password = null, array $requestOptions = [], ?ClientInterface $httpClient = null)
     {
         if ($httpClient && $requestOptions) {
             throw new \InvalidArgumentException('If argument 3 is provided, argument 4 must be omitted or passed with `null` as value');
@@ -100,6 +101,7 @@ class Client
             RequestOptions::CONNECT_TIMEOUT => 10,
             RequestOptions::TIMEOUT => 60,
         ];
+        $this->baseUri = rtrim(self::API_URL, '/');
         $this->client = $httpClient ?: new GuzzleClient($requestOptions);
     }
 
@@ -137,7 +139,7 @@ class Client
      *
      * @return null|\stdClass|array
      */
-    public function post($path, array $body = [], array $params = null)
+    public function post($path, array $body = [], ?array $params = null)
     {
         return $this->executeRequest('POST', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
@@ -151,7 +153,7 @@ class Client
      *
      * @return null|\stdClass|array
      */
-    public function put($path, array $body = null, array $params = [])
+    public function put($path, ?array $body = null, array $params = [])
     {
         return $this->executeRequest('PUT', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
@@ -167,6 +169,23 @@ class Client
     public function delete($path, array $params = [])
     {
         return $this->executeRequest('DELETE', $path, [RequestOptions::QUERY => $params]);
+    }
+
+    /**
+     * @param string $content
+     *
+     * @throws \InvalidArgumentException When the content is not valid JSON
+     *
+     * @return mixed
+     */
+    private function decodeJson($content)
+    {
+        $data = json_decode($content);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new \InvalidArgumentException('json_decode error: '.json_last_error_msg());
+        }
+
+        return $data;
     }
 
     /**
@@ -188,7 +207,7 @@ class Client
         } catch (GuzzleRequestException $e) {
             if ($e->hasResponse()) {
                 $content = trim($e->getResponse()->getBody()->getContents());
-                if ($content && ($object = \GuzzleHttp\json_decode($content)) && isset($object->Message)) {
+                if ($content && ($object = $this->decodeJson($content)) && isset($object->Message)) {
                     $modelException = null;
                     if (isset($object->ModelState)) {
                         $modelExceptionMessages = [];
@@ -211,7 +230,7 @@ class Client
         }
 
         if ($content) {
-            if (!($object = \GuzzleHttp\json_decode($content)) && JSON_ERROR_NONE !== ($jsonLastError = json_last_error())) {
+            if (!($object = $this->decodeJson($content)) && JSON_ERROR_NONE !== ($jsonLastError = json_last_error())) {
                 throw new ResponseException(
                     sprintf('Response body could not be parsed since it doesn\'t contain a valid JSON structure, %s (%d): %s', json_last_error_msg(), $jsonLastError, $content)
                 );

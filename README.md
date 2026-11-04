@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/Facturama/facturama-php-sdk.svg?branch=master)](https://travis-ci.org/Facturama/facturama-php-sdk)
+[![CI](https://github.com/Facturama/facturama-php-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Facturama/facturama-php-sdk/actions/workflows/ci.yml)
 
 # Facturama PHP SDK 
 
@@ -21,12 +21,12 @@
 
 ### Dependencias
 
-Esta librería requiere PHP 5.5 como mínimo
+Esta librería requiere PHP 7.4 o superior (probada hasta PHP 8.3).
 
 ### Instalación
 
 ```sh
-    composer require facturama/facturama-php-sdk:^2.0@dev
+    composer require facturama/facturama-php-sdk
 ```
 
 ### Incluyendo la librería
@@ -40,6 +40,9 @@ Ejemplo:
 ```php
 $facturama = new \Facturama\Client('USER', 'PASSWORD');
 ```
+
+> **Importante:** por defecto el cliente apunta al ambiente **Sandbox** (`https://apisandbox.facturama.mx`).
+> Para timbrar en producción usa `$facturama->setApiUrl('https://api.facturama.mx');`
 ## API Web
 
 > Creación de CFDIs con un único emisor, (el propietario de la cuenta, cuyo Perfil Fiscal se tiene configurado)

@@ -9,5 +9,6 @@
  * with this source code in the file LICENSE.
  */
 
-define('USER', '');
-define('PASSWORD', '');
+// Set FACTURAMA_USER / FACTURAMA_PASSWORD in your environment, or edit the fallbacks below.
+define('USER', getenv('FACTURAMA_USER') ?: '');
+define('PASSWORD', getenv('FACTURAMA_PASSWORD') ?: '');
