@@ -20,7 +20,7 @@ use Facturama\Tests\FacturamaBaseTest;
  */
 class CfdiUseTest extends FacturamaBaseTest
 {
-    public function testCfdiUseApi()
+    public function testCfdiUseApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/CfdiUses'));
     }
@@ -28,22 +28,22 @@ class CfdiUseTest extends FacturamaBaseTest
     /**
      * @dataProvider getCfdiUses
      */
-    public function testCfdiUses(\stdClass $cfdiUse)
+    public function testCfdiUses(\stdClass $cfdiUse): void
     {
-        $this->assertObjectHasAttribute('Name', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Name'));
         $this->assertSame($cfdiUse->Name, CfdiUse::findByName($cfdiUse->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Value'));
         $this->assertSame($cfdiUse->Value, CfdiUse::findByValue($cfdiUse->Value)['value']);
 
-        $this->assertObjectHasAttribute('Moral', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Moral'));
         $this->assertSame($cfdiUse->Moral, CfdiUse::findByName($cfdiUse->Name)['moral']);
 
-        $this->assertObjectHasAttribute('Natural', $cfdiUse);
+        $this->assertTrue(property_exists($cfdiUse, 'Natural'));
         $this->assertSame($cfdiUse->Natural, CfdiUse::findByName($cfdiUse->Name)['natural']);
     }
 
-    public function testNoUnusedCfdiUses()
+    public function testNoUnusedCfdiUses(): void
     {
         $apiCfdiUses = $this->getCfdiUses();
         $cfdiUses = CfdiUse::CATALOG_CFDI_USE;
@@ -51,7 +51,7 @@ class CfdiUseTest extends FacturamaBaseTest
         foreach ($apiCfdiUses as $cfdiUse) {
             $cfdiUse = reset($cfdiUse);
             if (false === $index = array_search($cfdiUse->Name, array_column(CfdiUse::CATALOG_CFDI_USE, 'name'), true)) {
-                $this->fail(sprintf('CFDI use with name "%s" was not found', $cfdiUse->Name));
+                $this->fail(\sprintf('CFDI use with name "%s" was not found', $cfdiUse->Name));
             }
 
             unset($cfdiUses[$index]);

@@ -31,7 +31,7 @@ class FacturamaBaseTest extends TestCase
      */
     private $customHttpClient;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = new Client(getenv('api_username'), getenv('api_password'));
@@ -39,22 +39,22 @@ class FacturamaBaseTest extends TestCase
         $this->customHttpClient = $this->createMock(GuzzleClient::class);
     }
 
-    public function testCreateContact()
+    public function testCreateContact(): void
     {
         $this->markTestIncomplete('Complete this test');
     }
 
-    public function testCustomHttpClient()
+    public function testCustomHttpClient(): void
     {
         $this->client = $this->getMockBuilder(Client::class)
             ->setConstructorArgs([null, null, [], $this->customHttpClient])
             ->getMock();
     }
 
-    public function testCustomHttpClientWithRequestOptions()
+    public function testCustomHttpClientWithRequestOptions(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('{If argument 3 is provided, argument 4 must be omitted or passed with `null` as value}');
+        $this->expectExceptionMessageMatches('{If argument 3 is provided, argument 4 must be omitted or passed with `null` as value}');
         $this->client = $this->getMockBuilder(Client::class)
             ->setConstructorArgs([null, null, ['verify' => false], $this->customHttpClient])
             ->getMock();

@@ -24,54 +24,55 @@ use GuzzleHttp\RequestOptions;
  */
 class Client
 {
-    const VERSION = '2.0.1';
+    public const VERSION = '2.1.0';
     /*
     https://apisandbox.facturama.mx //Pruebas desarrollo
     https://api.facturama.mx  //Produccion
     */
-    const API_URL = 'https://apisandbox.facturama.mx/';
-    const USER_AGENT = 'Facturama-PHP-SDK-v2.0.1';
+    public const API_URL = 'https://apisandbox.facturama.mx/';
+    public const USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
 
-    const FILE_TYPE_PDF = 'pdf';
-    const FILE_TYPE_HTML = 'html';
-    const FILE_TYPE_XML = 'xml';
+    public const FILE_TYPE_PDF = 'pdf';
+    public const FILE_TYPE_HTML = 'html';
+    public const FILE_TYPE_XML = 'xml';
 
-    const RECEIPT_PAYROLL = 'payroll';
-    const RECEIPT_RECEIVED = 'received';
-    const RECEIPT_ISSUED = 'issued';
+    public const RECEIPT_PAYROLL = 'payroll';
+    public const RECEIPT_RECEIVED = 'received';
+    public const RECEIPT_ISSUED = 'issued';
 
-    const STATE_AGUASCALIENTES = 'AGUASCALIENTES';
-    const STATE_BAJA_CALIFORNIA = 'BAJA CALIFORNIA';
-    const STATE_BAJA_CALIFORNIA_SUR = 'BAJA CALIFORNIA SUR';
-    const STATE_CAMPECHE = 'CAMPECHE';
-    const STATE_CHIAPAS = 'CHIAPAS';
-    const STATE_CHIHUAHUA = 'CHIHUAHUA';
-    const STATE_COAHUILA = 'COAHUILA';
-    const STATE_COLIMA = 'COLIMA';
-    const STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
-    const STATE_DURANGO = 'DURANGO';
-    const STATE_GUANAJUATO = 'GUANAJUATO';
-    const STATE_GUERRERO = 'GUERRERO';
-    const STATE_HIDALGO = 'HIDALGO';
-    const STATE_JALISCO = 'JALISCO';
-    const STATE_ESTADO_DE_MEXICO = 'ESTADO DE MEXICO';
-    const STATE_MICHOACAN_DE_OCAMPO = 'MICHOACAN DE OCAMPO';
-    const STATE_MORELOS = 'MORELOS';
-    const STATE_NAYARIT = 'NAYARIT';
-    const STATE_NUEVO_LEON = 'NUEVO LEON';
-    const STATE_OAXACA = 'OAXACA';
-    const STATE_PUEBLA = 'PUEBLA';
-    const STATE_QUERETARO = 'QUERETARO';
-    const STATE_QUINTANA_ROO = 'QUINTANA ROO';
-    const STATE_SAN_LUIS_POTOSI = 'SAN LUIS POTOSI';
-    const STATE_SINALOA = 'SINALOA';
-    const STATE_SONORA = 'SONORA';
-    const STATE_TABASCO = 'TABASCO';
-    const STATE_TAMAULIPAS = 'TAMAULIPAS';
-    const STATE_TLAXCALA = 'TLAXCALA';
-    const STATE_VERACRUZ_DE_IGNACIO_DE_LA_LLAVE = 'VERACRUZ DE IGNACIO DE LA LLAVE';
-    const STATE_YUCATAN = 'YUCATAN';
-    const STATE_ZACATECAS = 'ZACATECAS';
+    public const STATE_AGUASCALIENTES = 'AGUASCALIENTES';
+    public const STATE_BAJA_CALIFORNIA = 'BAJA CALIFORNIA';
+    public const STATE_BAJA_CALIFORNIA_SUR = 'BAJA CALIFORNIA SUR';
+    public const STATE_CAMPECHE = 'CAMPECHE';
+    public const STATE_CHIAPAS = 'CHIAPAS';
+    public const STATE_CHIHUAHUA = 'CHIHUAHUA';
+    public const STATE_COAHUILA = 'COAHUILA';
+    public const STATE_COLIMA = 'COLIMA';
+    public const STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
+    public const STATE_CIUDAD_DE_MEXICO = 'CIUDAD DE MEXICO';
+    public const STATE_DURANGO = 'DURANGO';
+    public const STATE_GUANAJUATO = 'GUANAJUATO';
+    public const STATE_GUERRERO = 'GUERRERO';
+    public const STATE_HIDALGO = 'HIDALGO';
+    public const STATE_JALISCO = 'JALISCO';
+    public const STATE_ESTADO_DE_MEXICO = 'ESTADO DE MEXICO';
+    public const STATE_MICHOACAN_DE_OCAMPO = 'MICHOACAN DE OCAMPO';
+    public const STATE_MORELOS = 'MORELOS';
+    public const STATE_NAYARIT = 'NAYARIT';
+    public const STATE_NUEVO_LEON = 'NUEVO LEON';
+    public const STATE_OAXACA = 'OAXACA';
+    public const STATE_PUEBLA = 'PUEBLA';
+    public const STATE_QUERETARO = 'QUERETARO';
+    public const STATE_QUINTANA_ROO = 'QUINTANA ROO';
+    public const STATE_SAN_LUIS_POTOSI = 'SAN LUIS POTOSI';
+    public const STATE_SINALOA = 'SINALOA';
+    public const STATE_SONORA = 'SONORA';
+    public const STATE_TABASCO = 'TABASCO';
+    public const STATE_TAMAULIPAS = 'TAMAULIPAS';
+    public const STATE_TLAXCALA = 'TLAXCALA';
+    public const STATE_VERACRUZ_DE_IGNACIO_DE_LA_LLAVE = 'VERACRUZ DE IGNACIO DE LA LLAVE';
+    public const STATE_YUCATAN = 'YUCATAN';
+    public const STATE_ZACATECAS = 'ZACATECAS';
 
     /**
      * @var ClientInterface
@@ -81,15 +82,13 @@ class Client
     /**
      * @var string
      */
-    private $baseUri = self::API_URL;
+    private $baseUri;
 
     /**
      * @param string $user
      * @param string $password
-     * @param array $requestOptions
-     * @param null|ClientInterface $httpClient
      */
-    public function __construct($user = null, $password = null, array $requestOptions = [], ClientInterface $httpClient = null)
+    public function __construct($user = null, $password = null, array $requestOptions = [], ?ClientInterface $httpClient = null)
     {
         if ($httpClient && $requestOptions) {
             throw new \InvalidArgumentException('If argument 3 is provided, argument 4 must be omitted or passed with `null` as value');
@@ -100,6 +99,7 @@ class Client
             RequestOptions::CONNECT_TIMEOUT => 10,
             RequestOptions::TIMEOUT => 60,
         ];
+        $this->baseUri = rtrim(self::API_URL, '/');
         $this->client = $httpClient ?: new GuzzleClient($requestOptions);
     }
 
@@ -119,9 +119,8 @@ class Client
      * Get Request
      *
      * @param string $path
-     * @param array $params
      *
-     * @return null|\stdClass|array
+     * @return \stdClass|array|null
      */
     public function get($path, array $params = [])
     {
@@ -133,11 +132,10 @@ class Client
      *
      * @param string $path
      * @param array|null $body
-     * @param array $params
      *
-     * @return null|\stdClass|array
+     * @return \stdClass|array|null
      */
-    public function post($path, array $body = [], array $params = null)
+    public function post($path, array $body = [], ?array $params = null)
     {
         return $this->executeRequest('POST', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
@@ -146,12 +144,10 @@ class Client
      * PUT Request
      *
      * @param string $path
-     * @param array|null $body
-     * @param array $params
      *
-     * @return null|\stdClass|array
+     * @return \stdClass|array|null
      */
-    public function put($path, array $body = null, array $params = [])
+    public function put($path, ?array $body = null, array $params = [])
     {
         return $this->executeRequest('PUT', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
@@ -160,9 +156,8 @@ class Client
      * DELETE Request
      *
      * @param string $path
-     * @param array $params
      *
-     * @return null|\stdClass|array
+     * @return \stdClass|array|null
      */
     public function delete($path, array $params = [])
     {
@@ -174,21 +169,21 @@ class Client
      *
      * @param string $method
      * @param string $url
-     * @param array $options
      *
      * @throws \RuntimeException|\LogicException
      *
-     * @return null|\stdClass|array The decoded JSON representation using `json_decode()`
+     * @return \stdClass|array|null The decoded JSON representation using `json_decode()`
      */
     private function executeRequest($method, $url, array $options = [])
     {
         try {
-            $response = $this->client->request($method, sprintf('%s/%s', $this->baseUri, $url), $options);
+            $response = $this->client->request($method, \sprintf('%s/%s', $this->baseUri, $url), $options);
             $content = trim($response->getBody()->getContents());
         } catch (GuzzleRequestException $e) {
             if ($e->hasResponse()) {
                 $content = trim($e->getResponse()->getBody()->getContents());
-                if ($content && ($object = \GuzzleHttp\json_decode($content)) && isset($object->Message)) {
+                $object = $content ? json_decode($content) : null;
+                if ($object && isset($object->Message)) {
                     $modelException = null;
                     if (isset($object->ModelState)) {
                         $modelExceptionMessages = [];
@@ -211,10 +206,9 @@ class Client
         }
 
         if ($content) {
-            if (!($object = \GuzzleHttp\json_decode($content)) && JSON_ERROR_NONE !== ($jsonLastError = json_last_error())) {
-                throw new ResponseException(
-                    sprintf('Response body could not be parsed since it doesn\'t contain a valid JSON structure, %s (%d): %s', json_last_error_msg(), $jsonLastError, $content)
-                );
+            $object = json_decode($content);
+            if (null === $object && \JSON_ERROR_NONE !== ($jsonLastError = json_last_error())) {
+                throw new ResponseException(\sprintf('Response body could not be parsed since it doesn\'t contain a valid JSON structure, %s (%d): %s', json_last_error_msg(), $jsonLastError, $content));
             }
 
             return $object;

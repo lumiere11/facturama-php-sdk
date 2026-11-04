@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Facturama/facturama-php-sdk.svg?branch=master)](https://travis-ci.org/Facturama/facturama-php-sdk)
+[![CI](https://github.com/Facturama/facturama-php-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/Facturama/facturama-php-sdk/actions/workflows/ci.yml)
 
 # Facturama SDK PHP
 
@@ -10,7 +10,7 @@
 
 ## Dependencies
 
-This library requires PHP 5.5 as minimum
+This library requires PHP 7.4 or higher (tested up to PHP 8.5).
 
 ## Create user account
 
@@ -23,7 +23,7 @@ This library requires PHP 5.5 as minimum
 
 ## How do I install it?
 ```sh
-    composer require facturama/facturama-php-sdk:^2.0@dev
+    composer require facturama/facturama-php-sdk
 ```
 
 ### Including the Lib
@@ -41,6 +41,9 @@ Example:
 ```php
 $facturama = new \Facturama\Client('USER', 'PASSWORD');
 ```
+
+> **Important:** by default the client targets the **Sandbox** environment (`https://apisandbox.facturama.mx`).
+> To issue real CFDIs use `$facturama->setApiUrl('https://api.facturama.mx');`
 
 ## Web API 
 

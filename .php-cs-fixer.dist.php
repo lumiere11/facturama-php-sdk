@@ -9,7 +9,7 @@ This source file is subject to a MIT license that is bundled
 with this source code in the file LICENSE.
 EOF;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
     ->setRules([
@@ -17,15 +17,14 @@ return PhpCsFixer\Config::create()
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'dir_constant' => true,
-        'ereg_to_preg' => true,
-        'general_phpdoc_annotation_remove' => ['expectedException', 'expectedExceptionMessage', 'expectedExceptionMessageRegExp'],
+        'general_phpdoc_annotation_remove' => ['annotations' => ['expectedException', 'expectedExceptionMessage', 'expectedExceptionMessageRegExp']],
         'header_comment' => ['header' => $header],
         'heredoc_to_nowdoc' => true,
         'linebreak_after_opening_tag' => true,
         'mb_str_functions' => true,
         'modernize_types_casting' => true,
         'no_empty_comment' => true,
-        'no_extra_consecutive_blank_lines' => [
+        'no_extra_blank_lines' => ['tokens' => [
             'break',
             'continue',
             'extra',
@@ -35,8 +34,8 @@ return PhpCsFixer\Config::create()
             'parenthesis_brace_block',
             'square_brace_block',
             'curly_brace_block',
-        ],
-        'no_short_echo_tag' => true,
+        ]],
+        'echo_tag_syntax' => ['format' => 'long'],
         'no_useless_else' => true,
         'no_useless_return' => true,
         'ordered_class_elements' => true,
@@ -47,11 +46,10 @@ return PhpCsFixer\Config::create()
         'phpdoc_summary' => false,
         'php_unit_construct' => true,
         'php_unit_strict' => true,
-        'psr4' => true,
+        'psr_autoloading' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->exclude(['vendor'])
-            ->in(__DIR__)
+            ->in([__DIR__.'/src', __DIR__.'/tests'])
     )
 ;

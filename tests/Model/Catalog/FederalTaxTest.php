@@ -20,7 +20,7 @@ use Facturama\Tests\FacturamaBaseTest;
  */
 class FederalTaxTest extends FacturamaBaseTest
 {
-    public function testFederalTaxApi()
+    public function testFederalTaxApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/FederalTaxes'));
     }
@@ -28,16 +28,16 @@ class FederalTaxTest extends FacturamaBaseTest
     /**
      * @dataProvider getFederalTaxes
      */
-    public function testFederalTaxes(\stdClass $federalTax)
+    public function testFederalTaxes(\stdClass $federalTax): void
     {
-        $this->assertObjectHasAttribute('Name', $federalTax);
+        $this->assertTrue(property_exists($federalTax, 'Name'));
         $this->assertSame($federalTax->Name, FederalTax::findByName($federalTax->Name)['name']);
 
-        $this->assertObjectHasAttribute('Value', $federalTax);
+        $this->assertTrue(property_exists($federalTax, 'Value'));
         $this->assertSame($federalTax->Value, FederalTax::findByValue($federalTax->Value)['value']);
     }
 
-    public function testNoUnusedFederalTaxes()
+    public function testNoUnusedFederalTaxes(): void
     {
         $apiFederalTaxes = $this->getFederalTaxes();
         $paymentForms = FederalTax::CATALOG_FEDERAL_TAX;
@@ -45,7 +45,7 @@ class FederalTaxTest extends FacturamaBaseTest
         foreach ($apiFederalTaxes as $federalTax) {
             $federalTax = reset($federalTax);
             if (false === $index = array_search($federalTax->Name, array_column(FederalTax::CATALOG_FEDERAL_TAX, 'name'), true)) {
-                $this->fail(sprintf('Federal tax with name "%s" was not found', $federalTax->Name));
+                $this->fail(\sprintf('Federal tax with name "%s" was not found', $federalTax->Name));
             }
 
             unset($paymentForms[$index]);
