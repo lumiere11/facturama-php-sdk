@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
- * (c) Facturama <soporte-api@facturama.mx>
+ * (c) Facturama <dev@facturama.com>
  *
  * This source file is subject to a MIT license that is bundled
  * with this source code in the file LICENSE.
@@ -13,11 +15,11 @@ require __DIR__.'/../../../vendor/autoload.php';
 
 $facturama = new Facturama\Client('pruebas', 'pruebas2011');
 
-$params = 
+$params =
     [
-    'search'=>'',
-    'start'=>'0',
-    'length'=>'100'
+        'search' => '',
+        'start' => '0',
+        'length' => '100',
     ];
 $result = $facturama->get('Products', $params);
 printf('<pre>%s<pre>', var_export($result, true));

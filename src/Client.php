@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -14,6 +16,9 @@ namespace Facturama;
 use Facturama\Exception\ModelException;
 use Facturama\Exception\RequestException;
 use Facturama\Exception\ResponseException;
+use Facturama\Resource\Cfdis;
+use Facturama\Resource\Clients;
+use Facturama\Resource\Products;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
@@ -24,71 +29,63 @@ use GuzzleHttp\RequestOptions;
  */
 class Client
 {
-    public const VERSION = '2.1.0';
+    public const string VERSION = '3.0.0';
     /*
     https://apisandbox.facturama.mx //Pruebas desarrollo
     https://api.facturama.mx  //Produccion
     */
-    public const API_URL = 'https://apisandbox.facturama.mx/';
-    public const USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
+    public const string API_URL = 'https://apisandbox.facturama.mx/';
+    public const string SANDBOX_URL = 'https://apisandbox.facturama.mx';
+    public const string PRODUCTION_URL = 'https://api.facturama.mx';
+    public const string USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
 
-    public const FILE_TYPE_PDF = 'pdf';
-    public const FILE_TYPE_HTML = 'html';
-    public const FILE_TYPE_XML = 'xml';
+    public const string FILE_TYPE_PDF = 'pdf';
+    public const string FILE_TYPE_HTML = 'html';
+    public const string FILE_TYPE_XML = 'xml';
 
-    public const RECEIPT_PAYROLL = 'payroll';
-    public const RECEIPT_RECEIVED = 'received';
-    public const RECEIPT_ISSUED = 'issued';
+    public const string RECEIPT_PAYROLL = 'payroll';
+    public const string RECEIPT_RECEIVED = 'received';
+    public const string RECEIPT_ISSUED = 'issued';
 
-    public const STATE_AGUASCALIENTES = 'AGUASCALIENTES';
-    public const STATE_BAJA_CALIFORNIA = 'BAJA CALIFORNIA';
-    public const STATE_BAJA_CALIFORNIA_SUR = 'BAJA CALIFORNIA SUR';
-    public const STATE_CAMPECHE = 'CAMPECHE';
-    public const STATE_CHIAPAS = 'CHIAPAS';
-    public const STATE_CHIHUAHUA = 'CHIHUAHUA';
-    public const STATE_COAHUILA = 'COAHUILA';
-    public const STATE_COLIMA = 'COLIMA';
-    public const STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
-    public const STATE_CIUDAD_DE_MEXICO = 'CIUDAD DE MEXICO';
-    public const STATE_DURANGO = 'DURANGO';
-    public const STATE_GUANAJUATO = 'GUANAJUATO';
-    public const STATE_GUERRERO = 'GUERRERO';
-    public const STATE_HIDALGO = 'HIDALGO';
-    public const STATE_JALISCO = 'JALISCO';
-    public const STATE_ESTADO_DE_MEXICO = 'ESTADO DE MEXICO';
-    public const STATE_MICHOACAN_DE_OCAMPO = 'MICHOACAN DE OCAMPO';
-    public const STATE_MORELOS = 'MORELOS';
-    public const STATE_NAYARIT = 'NAYARIT';
-    public const STATE_NUEVO_LEON = 'NUEVO LEON';
-    public const STATE_OAXACA = 'OAXACA';
-    public const STATE_PUEBLA = 'PUEBLA';
-    public const STATE_QUERETARO = 'QUERETARO';
-    public const STATE_QUINTANA_ROO = 'QUINTANA ROO';
-    public const STATE_SAN_LUIS_POTOSI = 'SAN LUIS POTOSI';
-    public const STATE_SINALOA = 'SINALOA';
-    public const STATE_SONORA = 'SONORA';
-    public const STATE_TABASCO = 'TABASCO';
-    public const STATE_TAMAULIPAS = 'TAMAULIPAS';
-    public const STATE_TLAXCALA = 'TLAXCALA';
-    public const STATE_VERACRUZ_DE_IGNACIO_DE_LA_LLAVE = 'VERACRUZ DE IGNACIO DE LA LLAVE';
-    public const STATE_YUCATAN = 'YUCATAN';
-    public const STATE_ZACATECAS = 'ZACATECAS';
+    public const string STATE_AGUASCALIENTES = 'AGUASCALIENTES';
+    public const string STATE_BAJA_CALIFORNIA = 'BAJA CALIFORNIA';
+    public const string STATE_BAJA_CALIFORNIA_SUR = 'BAJA CALIFORNIA SUR';
+    public const string STATE_CAMPECHE = 'CAMPECHE';
+    public const string STATE_CHIAPAS = 'CHIAPAS';
+    public const string STATE_CHIHUAHUA = 'CHIHUAHUA';
+    public const string STATE_COAHUILA = 'COAHUILA';
+    public const string STATE_COLIMA = 'COLIMA';
+    public const string STATE_DISTRITO_FEDERAL = 'DISTRITO FEDERAL';
+    public const string STATE_CIUDAD_DE_MEXICO = 'CIUDAD DE MEXICO';
+    public const string STATE_DURANGO = 'DURANGO';
+    public const string STATE_GUANAJUATO = 'GUANAJUATO';
+    public const string STATE_GUERRERO = 'GUERRERO';
+    public const string STATE_HIDALGO = 'HIDALGO';
+    public const string STATE_JALISCO = 'JALISCO';
+    public const string STATE_ESTADO_DE_MEXICO = 'ESTADO DE MEXICO';
+    public const string STATE_MICHOACAN_DE_OCAMPO = 'MICHOACAN DE OCAMPO';
+    public const string STATE_MORELOS = 'MORELOS';
+    public const string STATE_NAYARIT = 'NAYARIT';
+    public const string STATE_NUEVO_LEON = 'NUEVO LEON';
+    public const string STATE_OAXACA = 'OAXACA';
+    public const string STATE_PUEBLA = 'PUEBLA';
+    public const string STATE_QUERETARO = 'QUERETARO';
+    public const string STATE_QUINTANA_ROO = 'QUINTANA ROO';
+    public const string STATE_SAN_LUIS_POTOSI = 'SAN LUIS POTOSI';
+    public const string STATE_SINALOA = 'SINALOA';
+    public const string STATE_SONORA = 'SONORA';
+    public const string STATE_TABASCO = 'TABASCO';
+    public const string STATE_TAMAULIPAS = 'TAMAULIPAS';
+    public const string STATE_TLAXCALA = 'TLAXCALA';
+    public const string STATE_VERACRUZ_DE_IGNACIO_DE_LA_LLAVE = 'VERACRUZ DE IGNACIO DE LA LLAVE';
+    public const string STATE_YUCATAN = 'YUCATAN';
+    public const string STATE_ZACATECAS = 'ZACATECAS';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
+    private ClientInterface $client;
 
-    /**
-     * @var string
-     */
-    private $baseUri;
+    private string $baseUri;
 
-    /**
-     * @param string $user
-     * @param string $password
-     */
-    public function __construct($user = null, $password = null, array $requestOptions = [], ?ClientInterface $httpClient = null)
+    public function __construct(?string $user = null, ?string $password = null, array $requestOptions = [], ?ClientInterface $httpClient = null)
     {
         if ($httpClient && $requestOptions) {
             throw new \InvalidArgumentException('If argument 3 is provided, argument 4 must be omitted or passed with `null` as value');
@@ -103,12 +100,7 @@ class Client
         $this->client = $httpClient ?: new GuzzleClient($requestOptions);
     }
 
-    /**
-     * @param string $baseUri
-     *
-     * @return Client
-     */
-    public function setApiUrl($baseUri)
+    public function setApiUrl(string $baseUri): self
     {
         $this->baseUri = rtrim($baseUri, '/');
 
@@ -116,13 +108,32 @@ class Client
     }
 
     /**
-     * Get Request
-     *
-     * @param string $path
-     *
-     * @return \stdClass|array|null
+     * Whether this client targets the production API.
      */
-    public function get($path, array $params = [])
+    public function isProduction(): bool
+    {
+        return self::PRODUCTION_URL === $this->baseUri;
+    }
+
+    public function cfdis(): Cfdis
+    {
+        return new Cfdis($this);
+    }
+
+    public function clients(): Clients
+    {
+        return new Clients($this);
+    }
+
+    public function products(): Products
+    {
+        return new Products($this);
+    }
+
+    /**
+     * Get Request
+     */
+    public function get(string $path, array $params = []): \stdClass|array|null
     {
         return $this->executeRequest('GET', $path, [RequestOptions::QUERY => $params]);
     }
@@ -130,36 +141,25 @@ class Client
     /**
      * POST Request
      *
-     * @param string $path
      * @param array|null $body
-     *
-     * @return \stdClass|array|null
      */
-    public function post($path, array $body = [], ?array $params = null)
+    public function post(string $path, array $body = [], ?array $params = null): \stdClass|array|null
     {
         return $this->executeRequest('POST', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
 
     /**
      * PUT Request
-     *
-     * @param string $path
-     *
-     * @return \stdClass|array|null
      */
-    public function put($path, ?array $body = null, array $params = [])
+    public function put(string $path, ?array $body = null, array $params = []): \stdClass|array|null
     {
         return $this->executeRequest('PUT', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
 
     /**
      * DELETE Request
-     *
-     * @param string $path
-     *
-     * @return \stdClass|array|null
      */
-    public function delete($path, array $params = [])
+    public function delete(string $path, array $params = []): \stdClass|array|null
     {
         return $this->executeRequest('DELETE', $path, [RequestOptions::QUERY => $params]);
     }
@@ -167,14 +167,11 @@ class Client
     /**
      * Execute the request and return the resulting object
      *
-     * @param string $method
-     * @param string $url
-     *
      * @throws \RuntimeException|\LogicException
      *
      * @return \stdClass|array|null The decoded JSON representation using `json_decode()`
      */
-    private function executeRequest($method, $url, array $options = [])
+    private function executeRequest(string $method, string $url, array $options = []): \stdClass|array|null
     {
         try {
             $response = $this->client->request($method, \sprintf('%s/%s', $this->baseUri, $url), $options);
@@ -194,7 +191,7 @@ class Client
                         if ($modelExceptionMessages) {
                             $modelExceptionMessage = implode('; ', $modelExceptionMessages).'.';
                         }
-                        $modelException = new ModelException($modelExceptionMessage, $e->getCode());
+                        $modelException = new ModelException($modelExceptionMessage ?? '', $e->getCode());
                     }
                     throw new RequestException($object->Message, 0, $modelException);
                 }

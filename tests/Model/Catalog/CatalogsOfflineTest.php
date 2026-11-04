@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -16,6 +18,7 @@ use Facturama\Model\Catalog\CfdiUse;
 use Facturama\Model\Catalog\FederalTax;
 use Facturama\Model\Catalog\PaymentForm;
 use Facturama\Model\Catalog\PaymentMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class CatalogsOfflineTest extends TestCase
 {
-    public function catalogProvider()
+    public static function catalogProvider(): array
     {
         return [
             'CfdiType' => [CfdiType::class, CfdiType::CATALOG_CFDI_TYPE],
@@ -34,9 +37,7 @@ class CatalogsOfflineTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider catalogProvider
-     */
+    #[DataProvider('catalogProvider')]
     public function testCatalogIsNotEmptyAndEntriesAreWellFormed($class, array $catalog): void
     {
         $this->assertNotEmpty($catalog);
@@ -48,18 +49,14 @@ class CatalogsOfflineTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider catalogProvider
-     */
+    #[DataProvider('catalogProvider')]
     public function testNamesAreUnique($class, array $catalog): void
     {
         $names = array_column($catalog, 'name');
         $this->assertSame(\count($names), \count(array_unique($names)));
     }
 
-    /**
-     * @dataProvider catalogProvider
-     */
+    #[DataProvider('catalogProvider')]
     public function testFindByNameAndValueRoundTrip($class, array $catalog): void
     {
         foreach ($catalog as $entry) {
@@ -71,18 +68,14 @@ class CatalogsOfflineTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider catalogProvider
-     */
+    #[DataProvider('catalogProvider')]
     public function testUnknownNameThrows($class, array $catalog): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $class::findByName('__not-found__');
     }
 
-    /**
-     * @dataProvider catalogProvider
-     */
+    #[DataProvider('catalogProvider')]
     public function testUnknownValueIsNotFound($class, array $catalog): void
     {
         // CfdiType::findByValue() is a generator and yields nothing; the others throw.
@@ -99,15 +92,13 @@ class CatalogsOfflineTest extends TestCase
         $this->assertSame(\count($values), \count(array_unique($values)));
     }
 
-    /**
-     * @dataProvider cfdi40UseProvider
-     */
+    #[DataProvider('cfdi40UseProvider')]
     public function testCfdi40UsesAreAvailable($value, $name): void
     {
         $this->assertSame($name, CfdiUse::findByValue($value)['name']);
     }
 
-    public function cfdi40UseProvider()
+    public static function cfdi40UseProvider(): array
     {
         return [
             ['S01', 'Sin efectos fiscales'],

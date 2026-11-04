@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -17,20 +19,16 @@ namespace Facturama\Model\Catalog;
 interface CatalogInterface
 {
     /**
-     * @param string $name
-     *
      * @throws InvalidArgumentException
      *
      * @return array The matching entity for the given name
      */
-    public static function findByName($name);
+    public static function findByName(string $name): array;
 
     /**
-     * @param string $value
-     *
      * @throws InvalidArgumentException
      *
      * @return array|\Generator The matching entity / entities for the given value
      */
-    public static function findByValue($value);
+    public static function findByValue(string $value): array|\Generator;
 }

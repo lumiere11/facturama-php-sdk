@@ -10,7 +10,7 @@
 
 ## Dependencies
 
-This library requires PHP 7.4 or higher (tested up to PHP 8.5).
+This library requires PHP 8.3 or higher (tested up to PHP 8.5).
 
 ## Create user account
 
@@ -44,6 +44,129 @@ $facturama = new \Facturama\Client('USER', 'PASSWORD');
 
 > **Important:** by default the client targets the **Sandbox** environment (`https://apisandbox.facturama.mx`).
 > To issue real CFDIs use `$facturama->setApiUrl('https://api.facturama.mx');`
+
+## Laravel
+
+The SDK ships with an integration for **Laravel 13** (PHP 8.3 or higher): service provider, facade and config file. They are registered automatically (package auto-discovery); you do not need to edit `config/app.php`.
+
+### 1. Install
+
+```sh
+composer require facturama/facturama-php-sdk
+```
+
+### 2. Configure credentials
+
+Add to your `.env`:
+
+```env
+FACTURAMA_USER=your-user
+FACTURAMA_PASSWORD=your-password
+FACTURAMA_ENV=sandbox
+```
+
+| Variable | Description |
+|---|---|
+| `FACTURAMA_USER` / `FACTURAMA_PASSWORD` | Your Facturama account credentials. |
+| `FACTURAMA_ENV` | `sandbox` (default, test data only) or `production` (real CFDIs). Any other value throws an exception. |
+
+> Use `sandbox` while developing. Switch to `production` only when you are going to stamp real invoices.
+
+To change timeouts or other options, publish the config file (optional):
+
+```sh
+php artisan vendor:publish --tag=facturama-config
+```
+
+This creates `config/facturama.php`. After changing `.env` in production, run `php artisan config:clear` (or `config:cache`).
+
+### 3. Use the client
+
+Use the facade or type-hint `Facturama\Client` (the container always returns the same configured instance).
+
+**Facade**
+```php
+use Facturama\Laravel\Facades\Facturama;
+
+$clients = Facturama::clients()->list();
+$cfdi = Facturama::cfdis()->create($data);
+```
+
+**Dependency injection**
+```php
+use Facturama\Client;
+
+class InvoiceController
+{
+    public function __construct(private readonly Client $facturama)
+    {
+    }
+
+    public function store(Request $request)
+    {
+        $cfdi = $this->facturama->cfdis()->create($request->validated());
+
+        return response()->json($cfdi, 201);
+    }
+}
+```
+
+A complete controller is available at [`examples/Laravel/InvoiceController.php`](examples/Laravel/InvoiceController.php).
+
+### 4. Available operations
+
+| Resource | Methods |
+|---|---|
+| `cfdis()` | `create($cfdi)`, `list($filters)`, `download($id, $format, $type)`, `sendByEmail($id, $email)`, `cancel($id, $motive)` |
+| `clients()` | `list()`, `find($id)`, `create($data)`, `update($id, $data)`, `delete($id)` |
+| `products()` | `list()`, `find($id)`, `create($data)`, `update($id, $data)`, `delete($id)` |
+
+For any other endpoint use the generic `get()`, `post()`, `put()` and `delete()` methods, e.g. `Facturama::get('catalogs/CfdiUses')`.
+
+Download an invoice PDF (the API returns the content base64 encoded):
+
+```php
+$file = Facturama::cfdis()->download($id, 'pdf');
+
+return response(base64_decode($file->Content), 200, ['Content-Type' => 'application/pdf']);
+```
+
+### 5. Error handling
+
+API errors throw `Facturama\Exception\RequestException` (carrying the API message) and invalid responses throw `ResponseException`. In Laravel, turn them into a controlled response:
+
+```php
+use Facturama\Exception\RequestException;
+
+try {
+    $cfdi = Facturama::cfdis()->create($data);
+} catch (RequestException $e) {
+    report($e);
+
+    return back()->withErrors(['facturama' => $e->getMessage()]);
+}
+```
+
+### 6. Testing your application
+
+Do not call Facturama in your tests: replace the client in the container.
+
+```php
+use Facturama\Client;
+
+$this->mock(Client::class, function ($mock) {
+    $mock->shouldReceive('cfdis->create')->once()->andReturn((object) ['Id' => 'abc']);
+});
+```
+
+### Outside Laravel
+
+The same resources work without Laravel:
+
+```php
+$facturama = new \Facturama\Client('USER', 'PASSWORD');
+$cfdi = $facturama->cfdis()->create($data);
+```
 
 ## Web API 
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -13,21 +15,20 @@ namespace Facturama\Tests\Model\Catalog;
 
 use Facturama\Client;
 use Facturama\Model\Catalog\CfdiType;
-use Facturama\Tests\FacturamaBaseTest;
+use Facturama\Tests\Support\LiveApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
  */
-class CfdiTypeTest extends FacturamaBaseTest
+class CfdiTypeTest extends LiveApiTestCase
 {
     public function testCfdiTypeApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/CfdiTypes'));
     }
 
-    /**
-     * @dataProvider getCfdiTypes
-     */
+    #[DataProvider('getCfdiTypes')]
     public function testCfdiTypes(\stdClass $cfdiType): void
     {
         $this->assertTrue(property_exists($cfdiType, 'Name'));
@@ -41,7 +42,7 @@ class CfdiTypeTest extends FacturamaBaseTest
 
     public function testNoUnusedCfdiTypes(): void
     {
-        $apiCfdiTypes = $this->getCfdiTypes();
+        $apiCfdiTypes = self::getCfdiTypes();
         $cfdiTypes = CfdiType::CATALOG_CFDI_TYPE;
 
         foreach ($apiCfdiTypes as $cfdiType) {
@@ -60,9 +61,9 @@ class CfdiTypeTest extends FacturamaBaseTest
     /**
      * return \stdClass[]|\Generator
      */
-    public function getCfdiTypes()
+    public static function getCfdiTypes(): iterable
     {
-        $client = new Client(getenv('api_username'), getenv('api_password'));
+        $client = new Client(getenv('api_username') ?: null, getenv('api_password') ?: null);
 
         foreach ($client->get('catalogs/CfdiTypes') as $cfdiType) {
             yield [$cfdiType];

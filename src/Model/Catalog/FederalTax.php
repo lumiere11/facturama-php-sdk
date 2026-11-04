@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -16,23 +18,23 @@ namespace Facturama\Model\Catalog;
  */
 class FederalTax implements CatalogInterface
 {
-    public const FEDERAL_TAX_IEPS = [
+    public const array FEDERAL_TAX_IEPS = [
         'name' => 'IEPS',
         'value' => '003',
     ];
-    public const FEDERAL_TAX_IEPS_RET = [
+    public const array FEDERAL_TAX_IEPS_RET = [
         'name' => 'IEPS RET',
         'value' => '003',
     ];
-    public const FEDERAL_TAX_ISR = [
+    public const array FEDERAL_TAX_ISR = [
         'name' => 'ISR',
         'value' => '001',
     ];
-    public const FEDERAL_TAX_IVA = [
+    public const array FEDERAL_TAX_IVA = [
         'name' => 'IVA',
         'value' => '002',
     ];
-    public const FEDERAL_TAX_IVA_RET = [
+    public const array FEDERAL_TAX_IVA_RET = [
         'name' => 'IVA RET',
         'value' => '002',
     ];
@@ -42,7 +44,7 @@ class FederalTax implements CatalogInterface
      *
      * @see https://www.api.facturama.com.mx/api/catalogs/FederalTaxes
      */
-    public const CATALOG_FEDERAL_TAX = [
+    public const array CATALOG_FEDERAL_TAX = [
         self::FEDERAL_TAX_IEPS,
         self::FEDERAL_TAX_IEPS_RET,
         self::FEDERAL_TAX_ISR,
@@ -51,13 +53,12 @@ class FederalTax implements CatalogInterface
     ];
 
     /**
-     * @param string $name
-     *
      * @throws \InvalidArgumentException
      *
      * @return array The matching `FEDERAL_TAX_*` constant for the given federal tax name
      */
-    public static function findByName($name)
+    #[\Override]
+    public static function findByName(string $name): array
     {
         if (false === $index = array_search($name, array_column(self::CATALOG_FEDERAL_TAX, 'name'), true)) {
             throw new \InvalidArgumentException(\sprintf('Federal tax with name "%s" was not found', $name));
@@ -67,13 +68,12 @@ class FederalTax implements CatalogInterface
     }
 
     /**
-     * @param string $value
-     *
      * @throws \InvalidArgumentException
      *
      * @return array The matching `FEDERAL_TAX_*` constant for the given federal tax value
      */
-    public static function findByValue($value)
+    #[\Override]
+    public static function findByValue(string $value): array
     {
         if (false === $index = array_search($value, array_column(self::CATALOG_FEDERAL_TAX, 'value'), true)) {
             throw new \InvalidArgumentException(\sprintf('Federal tax with value "%s" was not found', $value));

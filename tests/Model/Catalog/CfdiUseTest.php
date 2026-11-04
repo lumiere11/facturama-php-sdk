@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Facturama PHP SDK.
  *
@@ -13,21 +15,20 @@ namespace Facturama\Tests\Model\Catalog;
 
 use Facturama\Client;
 use Facturama\Model\Catalog\CfdiUse;
-use Facturama\Tests\FacturamaBaseTest;
+use Facturama\Tests\Support\LiveApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
  */
-class CfdiUseTest extends FacturamaBaseTest
+class CfdiUseTest extends LiveApiTestCase
 {
     public function testCfdiUseApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/CfdiUses'));
     }
 
-    /**
-     * @dataProvider getCfdiUses
-     */
+    #[DataProvider('getCfdiUses')]
     public function testCfdiUses(\stdClass $cfdiUse): void
     {
         $this->assertTrue(property_exists($cfdiUse, 'Name'));
@@ -45,7 +46,7 @@ class CfdiUseTest extends FacturamaBaseTest
 
     public function testNoUnusedCfdiUses(): void
     {
-        $apiCfdiUses = $this->getCfdiUses();
+        $apiCfdiUses = self::getCfdiUses();
         $cfdiUses = CfdiUse::CATALOG_CFDI_USE;
 
         foreach ($apiCfdiUses as $cfdiUse) {
@@ -63,9 +64,9 @@ class CfdiUseTest extends FacturamaBaseTest
     /**
      * return \stdClass[]|\Generator
      */
-    public function getCfdiUses()
+    public static function getCfdiUses(): iterable
     {
-        $client = new Client(getenv('api_username'), getenv('api_password'));
+        $client = new Client(getenv('api_username') ?: null, getenv('api_password') ?: null);
 
         // RFC with 12 chars length
         foreach ($client->get('catalogs/CfdiUses', ['keyword' => 'AAAA12345678']) as $cfdiUse) {
