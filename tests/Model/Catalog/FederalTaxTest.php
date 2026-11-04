@@ -13,21 +13,20 @@ namespace Facturama\Tests\Model\Catalog;
 
 use Facturama\Client;
 use Facturama\Model\Catalog\FederalTax;
-use Facturama\Tests\FacturamaBaseTest;
+use Facturama\Tests\Support\LiveApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
  */
-class FederalTaxTest extends FacturamaBaseTest
+class FederalTaxTest extends LiveApiTestCase
 {
     public function testFederalTaxApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/FederalTaxes'));
     }
 
-    /**
-     * @dataProvider getFederalTaxes
-     */
+    #[DataProvider('getFederalTaxes')]
     public function testFederalTaxes(\stdClass $federalTax): void
     {
         $this->assertTrue(property_exists($federalTax, 'Name'));
@@ -39,7 +38,7 @@ class FederalTaxTest extends FacturamaBaseTest
 
     public function testNoUnusedFederalTaxes(): void
     {
-        $apiFederalTaxes = $this->getFederalTaxes();
+        $apiFederalTaxes = self::getFederalTaxes();
         $paymentForms = FederalTax::CATALOG_FEDERAL_TAX;
 
         foreach ($apiFederalTaxes as $federalTax) {
@@ -57,7 +56,7 @@ class FederalTaxTest extends FacturamaBaseTest
     /**
      * return \stdClass[]|\Generator
      */
-    public function getFederalTaxes()
+    public static function getFederalTaxes(): iterable
     {
         $client = new Client(getenv('api_username'), getenv('api_password'));
 

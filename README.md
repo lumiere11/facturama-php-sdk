@@ -21,7 +21,7 @@
 
 ### Dependencias
 
-Esta librería requiere PHP 7.4 o superior (probada hasta PHP 8.5).
+Esta librería requiere PHP 8.3 o superior (probada hasta PHP 8.5).
 
 ### Instalación
 
@@ -43,6 +43,33 @@ $facturama = new \Facturama\Client('USER', 'PASSWORD');
 
 > **Importante:** por defecto el cliente apunta al ambiente **Sandbox** (`https://apisandbox.facturama.mx`).
 > Para timbrar en producción usa `$facturama->setApiUrl('https://api.facturama.mx');`
+## Laravel
+
+Compatible con Laravel 13 (requiere `illuminate/support` ^13). El provider y el facade se registran solos (auto-discovery).
+
+```env
+FACTURAMA_USER=tu-usuario
+FACTURAMA_PASSWORD=tu-password
+FACTURAMA_ENV=sandbox   # o "production"
+```
+
+Publicar la configuración (opcional):
+```sh
+php artisan vendor:publish --tag=facturama-config
+```
+
+Uso con el facade o por inyección de dependencias:
+```php
+use Facturama\Client;
+use Facturama\Laravel\Facades\Facturama;
+
+$cfdi = Facturama::cfdis()->create($datos);            // facade
+
+Route::post('/facturas', fn (Client $facturama) => $facturama->cfdis()->create(request()->all()));
+```
+
+Recursos disponibles: `cfdis()` (create, list, download, sendByEmail, cancel), `clients()` y `products()` (list, find, create, update, delete). Fuera de Laravel funcionan igual: `$facturama->cfdis()->create($datos)`.
+
 ## API Web
 
 > Creación de CFDIs con un único emisor, (el propietario de la cuenta, cuyo Perfil Fiscal se tiene configurado)

@@ -2,10 +2,7 @@
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
          colors="true"
-         processIsolation="false"
-         stopOnFailure="false"
          bootstrap="vendor/autoload.php"
 >
     <php>
@@ -15,14 +12,24 @@
     </php>
 
     <testsuites>
-        <testsuite name="Facturama PHP SDK test suite">
-            <directory>tests</directory>
+        <testsuite name="offline">
+            <file>tests/ClientTest.php</file>
+            <file>tests/ResourcesTest.php</file>
+            <file>tests/LaravelIntegrationTest.php</file>
+            <file>tests/Model/Catalog/CatalogsOfflineTest.php</file>
+        </testsuite>
+        <testsuite name="live">
+            <file>tests/Model/Catalog/CfdiTypeTest.php</file>
+            <file>tests/Model/Catalog/CfdiUseTest.php</file>
+            <file>tests/Model/Catalog/FederalTaxTest.php</file>
+            <file>tests/Model/Catalog/PaymentFormTest.php</file>
+            <file>tests/Model/Catalog/PaymentMethodTest.php</file>
         </testsuite>
     </testsuites>
 
-    <coverage>
+    <source>
         <include>
             <directory>src</directory>
         </include>
-    </coverage>
+    </source>
 </phpunit>

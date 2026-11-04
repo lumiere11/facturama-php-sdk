@@ -13,21 +13,20 @@ namespace Facturama\Tests\Model\Catalog;
 
 use Facturama\Client;
 use Facturama\Model\Catalog\PaymentForm;
-use Facturama\Tests\FacturamaBaseTest;
+use Facturama\Tests\Support\LiveApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
  */
-class PaymentFormTest extends FacturamaBaseTest
+class PaymentFormTest extends LiveApiTestCase
 {
     public function testPaymentFormApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/PaymentForms'));
     }
 
-    /**
-     * @dataProvider getPaymentForms
-     */
+    #[DataProvider('getPaymentForms')]
     public function testPaymentForms(\stdClass $paymentForm): void
     {
         $this->assertTrue(property_exists($paymentForm, 'Name'));
@@ -39,7 +38,7 @@ class PaymentFormTest extends FacturamaBaseTest
 
     public function testNoUnusedPaymentForms(): void
     {
-        $apiPaymentForms = $this->getPaymentForms();
+        $apiPaymentForms = self::getPaymentForms();
         $paymentForms = PaymentForm::CATALOG_PAYMENT_FORM;
 
         foreach ($apiPaymentForms as $paymentForm) {
@@ -57,7 +56,7 @@ class PaymentFormTest extends FacturamaBaseTest
     /**
      * return \stdClass[]|\Generator
      */
-    public function getPaymentForms()
+    public static function getPaymentForms(): iterable
     {
         $client = new Client(getenv('api_username'), getenv('api_password'));
 

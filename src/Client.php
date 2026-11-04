@@ -14,6 +14,9 @@ namespace Facturama;
 use Facturama\Exception\ModelException;
 use Facturama\Exception\RequestException;
 use Facturama\Exception\ResponseException;
+use Facturama\Resource\Cfdis;
+use Facturama\Resource\Clients;
+use Facturama\Resource\Products;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException as GuzzleRequestException;
@@ -24,12 +27,14 @@ use GuzzleHttp\RequestOptions;
  */
 class Client
 {
-    public const VERSION = '2.1.0';
+    public const VERSION = '3.0.0';
     /*
     https://apisandbox.facturama.mx //Pruebas desarrollo
     https://api.facturama.mx  //Produccion
     */
     public const API_URL = 'https://apisandbox.facturama.mx/';
+    public const SANDBOX_URL = 'https://apisandbox.facturama.mx';
+    public const PRODUCTION_URL = 'https://api.facturama.mx';
     public const USER_AGENT = 'Facturama-PHP-SDK-v'.self::VERSION;
 
     public const FILE_TYPE_PDF = 'pdf';
@@ -74,21 +79,11 @@ class Client
     public const STATE_YUCATAN = 'YUCATAN';
     public const STATE_ZACATECAS = 'ZACATECAS';
 
-    /**
-     * @var ClientInterface
-     */
-    private $client;
+    private ClientInterface $client;
 
-    /**
-     * @var string
-     */
-    private $baseUri;
+    private string $baseUri;
 
-    /**
-     * @param string $user
-     * @param string $password
-     */
-    public function __construct($user = null, $password = null, array $requestOptions = [], ?ClientInterface $httpClient = null)
+    public function __construct(?string $user = null, ?string $password = null, array $requestOptions = [], ?ClientInterface $httpClient = null)
     {
         if ($httpClient && $requestOptions) {
             throw new \InvalidArgumentException('If argument 3 is provided, argument 4 must be omitted or passed with `null` as value');
@@ -103,12 +98,7 @@ class Client
         $this->client = $httpClient ?: new GuzzleClient($requestOptions);
     }
 
-    /**
-     * @param string $baseUri
-     *
-     * @return Client
-     */
-    public function setApiUrl($baseUri)
+    public function setApiUrl(string $baseUri): self
     {
         $this->baseUri = rtrim($baseUri, '/');
 
@@ -116,13 +106,32 @@ class Client
     }
 
     /**
-     * Get Request
-     *
-     * @param string $path
-     *
-     * @return \stdClass|array|null
+     * Whether this client targets the production API.
      */
-    public function get($path, array $params = [])
+    public function isProduction(): bool
+    {
+        return self::PRODUCTION_URL === $this->baseUri;
+    }
+
+    public function cfdis(): Cfdis
+    {
+        return new Cfdis($this);
+    }
+
+    public function clients(): Clients
+    {
+        return new Clients($this);
+    }
+
+    public function products(): Products
+    {
+        return new Products($this);
+    }
+
+    /**
+     * Get Request
+     */
+    public function get(string $path, array $params = []): \stdClass|array|null
     {
         return $this->executeRequest('GET', $path, [RequestOptions::QUERY => $params]);
     }
@@ -130,36 +139,25 @@ class Client
     /**
      * POST Request
      *
-     * @param string $path
      * @param array|null $body
-     *
-     * @return \stdClass|array|null
      */
-    public function post($path, array $body = [], ?array $params = null)
+    public function post(string $path, array $body = [], ?array $params = null): \stdClass|array|null
     {
         return $this->executeRequest('POST', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
 
     /**
      * PUT Request
-     *
-     * @param string $path
-     *
-     * @return \stdClass|array|null
      */
-    public function put($path, ?array $body = null, array $params = [])
+    public function put(string $path, ?array $body = null, array $params = []): \stdClass|array|null
     {
         return $this->executeRequest('PUT', $path, [RequestOptions::JSON => $body, RequestOptions::QUERY => $params]);
     }
 
     /**
      * DELETE Request
-     *
-     * @param string $path
-     *
-     * @return \stdClass|array|null
      */
-    public function delete($path, array $params = [])
+    public function delete(string $path, array $params = []): \stdClass|array|null
     {
         return $this->executeRequest('DELETE', $path, [RequestOptions::QUERY => $params]);
     }
@@ -167,14 +165,11 @@ class Client
     /**
      * Execute the request and return the resulting object
      *
-     * @param string $method
-     * @param string $url
-     *
      * @throws \RuntimeException|\LogicException
      *
      * @return \stdClass|array|null The decoded JSON representation using `json_decode()`
      */
-    private function executeRequest($method, $url, array $options = [])
+    private function executeRequest(string $method, string $url, array $options = []): \stdClass|array|null
     {
         try {
             $response = $this->client->request($method, \sprintf('%s/%s', $this->baseUri, $url), $options);
@@ -194,7 +189,7 @@ class Client
                         if ($modelExceptionMessages) {
                             $modelExceptionMessage = implode('; ', $modelExceptionMessages).'.';
                         }
-                        $modelException = new ModelException($modelExceptionMessage, $e->getCode());
+                        $modelException = new ModelException($modelExceptionMessage ?? '', $e->getCode());
                     }
                     throw new RequestException($object->Message, 0, $modelException);
                 }

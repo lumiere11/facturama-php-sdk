@@ -17,6 +17,7 @@ $params=
 [
   "Currency"=> "MXN",
   "ExpeditionPlace"=> "78140",
+  "Exportation"=> "01",
   "PaymentConditions"=> "CREDITO A SIETE DIAS",
   "Folio"=> "100",
   "CfdiType"=> "I",

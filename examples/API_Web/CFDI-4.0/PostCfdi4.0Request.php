@@ -24,6 +24,7 @@ $params = [
     'CfdiType' => 'I',
     'PaymentMethod' => 'PUE',
     'ExpeditionPlace' => '78140',
+    'Exportation' => '01',
     'Receiver' =>
     [
         'Rfc'=> 'URE180429TM6',

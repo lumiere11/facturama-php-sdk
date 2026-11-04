@@ -13,21 +13,20 @@ namespace Facturama\Tests\Model\Catalog;
 
 use Facturama\Client;
 use Facturama\Model\Catalog\PaymentMethod;
-use Facturama\Tests\FacturamaBaseTest;
+use Facturama\Tests\Support\LiveApiTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
  */
-class PaymentMethodTest extends FacturamaBaseTest
+class PaymentMethodTest extends LiveApiTestCase
 {
     public function testPaymentMethodApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/PaymentMethods'));
     }
 
-    /**
-     * @dataProvider getPaymentMethods
-     */
+    #[DataProvider('getPaymentMethods')]
     public function testPaymentMethods(\stdClass $paymentMethod): void
     {
         $this->assertTrue(property_exists($paymentMethod, 'Name'));
@@ -39,7 +38,7 @@ class PaymentMethodTest extends FacturamaBaseTest
 
     public function testNoUnusedPaymentMethods(): void
     {
-        $apiPaymentMethods = $this->getPaymentMethods();
+        $apiPaymentMethods = self::getPaymentMethods();
         $paymentMethods = PaymentMethod::CATALOG_PAYMENT_METHOD;
 
         foreach ($apiPaymentMethods as $paymentMethod) {
@@ -57,7 +56,7 @@ class PaymentMethodTest extends FacturamaBaseTest
     /**
      * return \stdClass[]|\Generator
      */
-    public function getPaymentMethods()
+    public static function getPaymentMethods(): iterable
     {
         $client = new Client(getenv('api_username'), getenv('api_password'));
 

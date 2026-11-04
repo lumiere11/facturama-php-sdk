@@ -1,0 +1,28 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer
+      - name: Tag must match Client::VERSION
+        run: |
+          VERSION=$(php -r "require 'src/Client.php'; echo Facturama\Client::VERSION;")
+          test "v${VERSION}" = "${GITHUB_REF_NAME}" || { echo "Tag ${GITHUB_REF_NAME} != Client::VERSION v${VERSION}"; exit 1; }
+      - run: composer update --prefer-dist --no-interaction
+      - run: vendor/bin/phpunit -c phpunit.xml.dist --testsuite offline
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
