@@ -20,7 +20,7 @@ use Facturama\Tests\FacturamaBaseTest;
  */
 class PaymentMethodTest extends FacturamaBaseTest
 {
-    public function testPaymentMethodApi()
+    public function testPaymentMethodApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/PaymentMethods'));
     }
@@ -28,7 +28,7 @@ class PaymentMethodTest extends FacturamaBaseTest
     /**
      * @dataProvider getPaymentMethods
      */
-    public function testPaymentMethods(\stdClass $paymentMethod)
+    public function testPaymentMethods(\stdClass $paymentMethod): void
     {
         $this->assertTrue(property_exists($paymentMethod, 'Name'));
         $this->assertSame($paymentMethod->Name, PaymentMethod::findByName($paymentMethod->Name)['name']);
@@ -37,7 +37,7 @@ class PaymentMethodTest extends FacturamaBaseTest
         $this->assertSame($paymentMethod->Value, PaymentMethod::findByValue($paymentMethod->Value)['value']);
     }
 
-    public function testNoUnusedPaymentMethods()
+    public function testNoUnusedPaymentMethods(): void
     {
         $apiPaymentMethods = $this->getPaymentMethods();
         $paymentMethods = PaymentMethod::CATALOG_PAYMENT_METHOD;
@@ -45,7 +45,7 @@ class PaymentMethodTest extends FacturamaBaseTest
         foreach ($apiPaymentMethods as $paymentMethod) {
             $paymentMethod = reset($paymentMethod);
             if (false === $index = array_search($paymentMethod->Name, array_column(PaymentMethod::CATALOG_PAYMENT_METHOD, 'name'), true)) {
-                $this->fail(sprintf('Payment method with name "%s" was not found', $paymentMethod->Name));
+                $this->fail(\sprintf('Payment method with name "%s" was not found', $paymentMethod->Name));
             }
 
             unset($paymentMethods[$index]);

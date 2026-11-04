@@ -20,7 +20,7 @@ use Facturama\Tests\FacturamaBaseTest;
  */
 class CfdiTypeTest extends FacturamaBaseTest
 {
-    public function testCfdiTypeApi()
+    public function testCfdiTypeApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/CfdiTypes'));
     }
@@ -28,7 +28,7 @@ class CfdiTypeTest extends FacturamaBaseTest
     /**
      * @dataProvider getCfdiTypes
      */
-    public function testCfdiTypes(\stdClass $cfdiType)
+    public function testCfdiTypes(\stdClass $cfdiType): void
     {
         $this->assertTrue(property_exists($cfdiType, 'Name'));
         $this->assertSame($cfdiType->Name, CfdiType::findByName($cfdiType->Name)['name']);
@@ -39,7 +39,7 @@ class CfdiTypeTest extends FacturamaBaseTest
         $this->assertContains(['name' => $cfdiType->Name, 'nameid' => $cfdiType->NameId, 'value' => $cfdiType->Value], CfdiType::findByValue($cfdiType->Value));
     }
 
-    public function testNoUnusedCfdiTypes()
+    public function testNoUnusedCfdiTypes(): void
     {
         $apiCfdiTypes = $this->getCfdiTypes();
         $cfdiTypes = CfdiType::CATALOG_CFDI_TYPE;
@@ -47,7 +47,7 @@ class CfdiTypeTest extends FacturamaBaseTest
         foreach ($apiCfdiTypes as $cfdiType) {
             $cfdiType = reset($cfdiType);
             if (false === $index = array_search($cfdiType->Name, array_column(CfdiType::CATALOG_CFDI_TYPE, 'name'), true)) {
-                $this->fail(sprintf('CFDI type with name "%s" was not found', $cfdiType->Name));
+                $this->fail(\sprintf('CFDI type with name "%s" was not found', $cfdiType->Name));
             }
 
             unset($cfdiTypes[$index]);

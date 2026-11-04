@@ -16,23 +16,23 @@ namespace Facturama\Model\Catalog;
  */
 class FederalTax implements CatalogInterface
 {
-    const FEDERAL_TAX_IEPS = [
+    public const FEDERAL_TAX_IEPS = [
         'name' => 'IEPS',
         'value' => '003',
     ];
-    const FEDERAL_TAX_IEPS_RET = [
+    public const FEDERAL_TAX_IEPS_RET = [
         'name' => 'IEPS RET',
         'value' => '003',
     ];
-    const FEDERAL_TAX_ISR = [
+    public const FEDERAL_TAX_ISR = [
         'name' => 'ISR',
         'value' => '001',
     ];
-    const FEDERAL_TAX_IVA = [
+    public const FEDERAL_TAX_IVA = [
         'name' => 'IVA',
         'value' => '002',
     ];
-    const FEDERAL_TAX_IVA_RET = [
+    public const FEDERAL_TAX_IVA_RET = [
         'name' => 'IVA RET',
         'value' => '002',
     ];
@@ -42,7 +42,7 @@ class FederalTax implements CatalogInterface
      *
      * @see https://www.api.facturama.com.mx/api/catalogs/FederalTaxes
      */
-    const CATALOG_FEDERAL_TAX = [
+    public const CATALOG_FEDERAL_TAX = [
         self::FEDERAL_TAX_IEPS,
         self::FEDERAL_TAX_IEPS_RET,
         self::FEDERAL_TAX_ISR,
@@ -60,7 +60,7 @@ class FederalTax implements CatalogInterface
     public static function findByName($name)
     {
         if (false === $index = array_search($name, array_column(self::CATALOG_FEDERAL_TAX, 'name'), true)) {
-            throw new \InvalidArgumentException(sprintf('Federal tax with name "%s" was not found', $name));
+            throw new \InvalidArgumentException(\sprintf('Federal tax with name "%s" was not found', $name));
         }
 
         return self::CATALOG_FEDERAL_TAX[$index];
@@ -76,7 +76,7 @@ class FederalTax implements CatalogInterface
     public static function findByValue($value)
     {
         if (false === $index = array_search($value, array_column(self::CATALOG_FEDERAL_TAX, 'value'), true)) {
-            throw new \InvalidArgumentException(sprintf('Federal tax with value "%s" was not found', $value));
+            throw new \InvalidArgumentException(\sprintf('Federal tax with value "%s" was not found', $value));
         }
 
         return self::CATALOG_FEDERAL_TAX[$index];

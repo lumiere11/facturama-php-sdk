@@ -24,36 +24,36 @@ use PHPUnit\Framework\TestCase;
  */
 class ClientTest extends TestCase
 {
-    private function createClient(array $responses)
-    {
-        $http = new GuzzleClient(['handler' => HandlerStack::create(new MockHandler($responses))]);
-
-        return new Client(null, null, [], $http);
-    }
-
-    public function testUserAgentMatchesVersion()
+    public function testUserAgentMatchesVersion(): void
     {
         $this->assertSame('Facturama-PHP-SDK-v'.Client::VERSION, Client::USER_AGENT);
     }
 
-    public function testGetDecodesJson()
+    public function testGetDecodesJson(): void
     {
         $client = $this->createClient([new Response(200, [], '{"Name":"x"}')]);
 
         $this->assertSame('x', $client->get('catalogs')->Name);
     }
 
-    public function testEmptyBodyReturnsNull()
+    public function testEmptyBodyReturnsNull(): void
     {
         $this->assertNull($this->createClient([new Response(200, [], '')])->get('catalogs'));
     }
 
-    public function testErrorMessageIsExposed()
+    public function testErrorMessageIsExposed(): void
     {
         $client = $this->createClient([new Response(400, [], '{"Message":"boom"}')]);
 
         $this->expectException(RequestException::class);
         $this->expectExceptionMessage('boom');
         $client->post('cfdi', []);
+    }
+
+    private function createClient(array $responses)
+    {
+        $http = new GuzzleClient(['handler' => HandlerStack::create(new MockHandler($responses))]);
+
+        return new Client(null, null, [], $http);
     }
 }

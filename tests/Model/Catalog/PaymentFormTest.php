@@ -20,7 +20,7 @@ use Facturama\Tests\FacturamaBaseTest;
  */
 class PaymentFormTest extends FacturamaBaseTest
 {
-    public function testPaymentFormApi()
+    public function testPaymentFormApi(): void
     {
         $this->assertNotEmpty($this->client->get('catalogs/PaymentForms'));
     }
@@ -28,7 +28,7 @@ class PaymentFormTest extends FacturamaBaseTest
     /**
      * @dataProvider getPaymentForms
      */
-    public function testPaymentForms(\stdClass $paymentForm)
+    public function testPaymentForms(\stdClass $paymentForm): void
     {
         $this->assertTrue(property_exists($paymentForm, 'Name'));
         $this->assertSame($paymentForm->Name, PaymentForm::findByName($paymentForm->Name)['name']);
@@ -37,7 +37,7 @@ class PaymentFormTest extends FacturamaBaseTest
         $this->assertSame($paymentForm->Value, PaymentForm::findByValue($paymentForm->Value)['value']);
     }
 
-    public function testNoUnusedPaymentForms()
+    public function testNoUnusedPaymentForms(): void
     {
         $apiPaymentForms = $this->getPaymentForms();
         $paymentForms = PaymentForm::CATALOG_PAYMENT_FORM;
@@ -45,7 +45,7 @@ class PaymentFormTest extends FacturamaBaseTest
         foreach ($apiPaymentForms as $paymentForm) {
             $paymentForm = reset($paymentForm);
             if (false === $index = array_search($paymentForm->Name, array_column(PaymentForm::CATALOG_PAYMENT_FORM, 'name'), true)) {
-                $this->fail(sprintf('Payment form with name "%s" was not found', $paymentForm->Name));
+                $this->fail(\sprintf('Payment form with name "%s" was not found', $paymentForm->Name));
             }
 
             unset($paymentForms[$index]);

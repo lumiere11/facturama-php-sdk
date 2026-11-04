@@ -35,7 +35,7 @@ return (new PhpCsFixer\Config())
             'square_brace_block',
             'curly_brace_block',
         ]],
-        'no_short_echo_tag' => true,
+        'echo_tag_syntax' => ['format' => 'long'],
         'no_useless_else' => true,
         'no_useless_return' => true,
         'ordered_class_elements' => true,
@@ -46,7 +46,7 @@ return (new PhpCsFixer\Config())
         'phpdoc_summary' => false,
         'php_unit_construct' => true,
         'php_unit_strict' => true,
-        'psr4' => true,
+        'psr_autoloading' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
