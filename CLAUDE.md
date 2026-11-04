@@ -27,7 +27,7 @@ This is a thin SDK for the Facturama (Mexican CFDI invoicing) REST API. Everythi
 
 ## Testing notes
 
-- `tests/Model/Catalog/*Test.php` compare the local catalogs against the **live Sandbox API** (with the credentials set in `phpunit.xml.dist`), so they need network access and can fail when the remote catalog changes. `tests/ClientTest.php` is offline (Guzzle `MockHandler`).
+- `tests/Model/Catalog/*Test.php` compare the local catalogs against the **live Sandbox API** (with the credentials set in `phpunit.xml.dist`), so they need network access and can fail when the remote catalog changes. `tests/ClientTest.php` and `tests/Model/Catalog/CatalogsOfflineTest.php` are offline (Guzzle `MockHandler`, local catalogs) and are the ones to run when the Sandbox is unreachable: `vendor/bin/phpunit --filter 'ClientTest|CatalogsOfflineTest'`. Note `CfdiType::findByValue()` is a generator (no exception on a miss), unlike the other catalogs.
 - `testNoUnusedCfdiUses` and similar tests require the local catalog and the API to match exactly, so removing or renaming an entry can break them.
 
 ## Versioning

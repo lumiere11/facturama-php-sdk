@@ -165,21 +165,6 @@ class Client
     }
 
     /**
-     * @param string $content
-     *
-     * @throws \InvalidArgumentException When the content is not valid JSON
-     */
-    private function decodeJson($content)
-    {
-        $data = json_decode($content);
-        if (\JSON_ERROR_NONE !== json_last_error()) {
-            throw new \InvalidArgumentException('json_decode error: '.json_last_error_msg());
-        }
-
-        return $data;
-    }
-
-    /**
      * Execute the request and return the resulting object
      *
      * @param string $method
@@ -197,7 +182,8 @@ class Client
         } catch (GuzzleRequestException $e) {
             if ($e->hasResponse()) {
                 $content = trim($e->getResponse()->getBody()->getContents());
-                if ($content && ($object = $this->decodeJson($content)) && isset($object->Message)) {
+                $object = $content ? json_decode($content) : null;
+                if ($object && isset($object->Message)) {
                     $modelException = null;
                     if (isset($object->ModelState)) {
                         $modelExceptionMessages = [];
@@ -220,7 +206,8 @@ class Client
         }
 
         if ($content) {
-            if (!($object = $this->decodeJson($content)) && \JSON_ERROR_NONE !== ($jsonLastError = json_last_error())) {
+            $object = json_decode($content);
+            if (null === $object && \JSON_ERROR_NONE !== ($jsonLastError = json_last_error())) {
                 throw new ResponseException(\sprintf('Response body could not be parsed since it doesn\'t contain a valid JSON structure, %s (%d): %s', json_last_error_msg(), $jsonLastError, $content));
             }
 
